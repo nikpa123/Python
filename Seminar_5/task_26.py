@@ -12,3 +12,4 @@ a = int(input("Введите число a: "))
 b = int(input("Введите число b: "))
 x = a
 print(sqr(a, b, x))
+
