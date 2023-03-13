@@ -63,7 +63,6 @@ def delete_contact(phone_book):
     n = int(input("Введите номер контакта, который вы хотите удалить: "))
     phone_book.pop(n - 1)
 
-
 while True:
     print('''Главное меню: 
     1. Открыть файл
