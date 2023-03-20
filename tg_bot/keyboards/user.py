@@ -1,26 +1,7 @@
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, ReplyKeyboardRemove
+from operations import *
 
-b1 = KeyboardButton('_', call_back='')
-b2 = KeyboardButton('C', call_back='')
-b3 = KeyboardButton('<=', call_back='')
-b4 = KeyboardButton('/', call_back='')
-b5 = KeyboardButton('7', call_back='')
-b6 = KeyboardButton('8', call_back='')
-b7 = KeyboardButton('9', call_back='')
-b8 = KeyboardButton('*', call_back='')
-b9 = KeyboardButton('4')
-b10 = KeyboardButton('5')
-b11 = KeyboardButton('6')
-b12 = KeyboardButton('-')
-b13 = KeyboardButton('1')
-b14 = KeyboardButton('2')
-b15 = KeyboardButton('3')
-b16 = KeyboardButton('+')
-b17 = KeyboardButton('_')
-b18 = KeyboardButton('0')
-b19 = KeyboardButton(',')
-b20 = KeyboardButton('=')
-
+b1 = KeyboardButton('+', sum_value(num1, num2))
+b2 = KeyboardButton('-', diff_value(num1, num2))
 user_kb = ReplyKeyboardMarkup(resize_keyboard=True)
-
-user_kb.row(b5, b6, b7, b8).row(b9, b10, b11, b12).row(b13, b14, b15, b16).row(b17, b18, b19, b20)
+user_kb.row(b1, b2)
