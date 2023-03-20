@@ -2,10 +2,11 @@ import random
 import config
 from aiogram.utils.callback_data import CallbackData
 from create_bot import dp
-from aiogram.types import Message, InlineKeyboardButton
+from aiogram.types import Message, InlineKeyboardButton, InlineKeyboardMarkup, CallbackQuery
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, ReplyKeyboardRemove
 
 total = 150
+level = 'hard'
 @dp.message_handler(commands=['start', 'начать'])
 async def mes_start(message: Message):
     await message.answer(text = f'{message.from_user.first_name}, привет!\n'
@@ -36,6 +37,21 @@ async def mes_set(message: Message):
     global total
     total = int(message.text.split()[1])
 
+@dp.message_handler(commands=['level'])
+async def difficulty_level(message: Message):
+    keyboard = InlineKeyboardMarkup(row_width=3).add(
+        InlineKeyboardButton(text='easy', callback_data="level:easy"),
+        InlineKeyboardButton(text='medium', callback_data="level:medium"),
+        InlineKeyboardButton(text='hard', callback_data="level:hard"),
+    )
+    await message.answer(text='Выберите уровень сложности: ', reply_markup=keyboard)
+
+@dp.callback_query_handler(text_startswith="level")
+async def buyvip(query: CallbackQuery):
+    await query.answer()
+    global level
+    level = query.data.split(":")[1]
+
 @dp.message_handler()
 async def all_catch(message: Message):
     if message.text.isdigit():
@@ -57,14 +73,21 @@ async def player_turn(message: Message):
     await message.answer(text=f'Теперь ходит бот')
     await bot_turn(message)
 
-
 async def bot_turn(message: Message):
     take_amount = 0
     current_total = config.games.get(message.from_user.id)
-    if current_total <= 28:
-        take_amount = current_total
-    else:
-        take_amount = current_total%29 if current_total != 0 else 1
+    if level == 'hard':
+        if current_total <= 28:
+            take_amount = current_total
+        else:
+            take_amount = current_total%29 if current_total%29 != 0 else 1
+    elif level == 'medium':
+        if current_total <= 28:
+            take_amount = current_total
+        else:
+            take_amount = random.randint(1, 28)
+    elif level == 'easy':
+        take_amount = random.randint(1,28)
     config.games[message.from_user.id] = config.games.get(message.from_user.id) - take_amount
     name = message.from_user.first_name
     await message.answer(text=f'Бот взял {take_amount} конфет и на столе осталось {config.games.get(message.from_user.id)}\n')
